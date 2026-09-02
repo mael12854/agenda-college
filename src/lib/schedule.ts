@@ -36,15 +36,6 @@ export type DaySlot = FreeSlot | PassingSlot | CourseSlot;
 /** Merges the day's courses with the gaps between them ("heures de trou" and "intercours"). */
 export function buildDaySlots(coursesToday: Course[]): DaySlot[] {
   const slots: DaySlot[] = [];
-  const dayEnd = timeToMinutes(SCHOOL_DAY_END);
-  // The timeline starts at the first class, not a fixed wall-clock time —
-  // there's no "intercours" or "heure de trou" before your day has even
-  // started. An empty day (no classes at all) is the one case where the
-  // full SCHOOL_DAY_START-SCHOOL_DAY_END span is shown as free.
-  let cursor =
-    coursesToday.length > 0
-      ? timeToMinutes(coursesToday[0].startTime)
-      : timeToMinutes(SCHOOL_DAY_START);
 
   const pushGap = (start: number, end: number) => {
     if (end <= start) return;
@@ -55,6 +46,20 @@ export function buildDaySlots(coursesToday: Course[]): DaySlot[] {
     });
   };
 
+  // A day with no classes at all has no first/last course to anchor on, so
+  // it falls back to the generic SCHOOL_DAY_START-SCHOOL_DAY_END window,
+  // shown as one free block.
+  if (coursesToday.length === 0) {
+    pushGap(timeToMinutes(SCHOOL_DAY_START), timeToMinutes(SCHOOL_DAY_END));
+    return slots;
+  }
+
+  // Otherwise the timeline runs from the first class to the last — never a
+  // fixed wall-clock time. There's no "heure de trou" before your day has
+  // started or after it's done; the first and last class define the day's
+  // own start and end.
+  let cursor = timeToMinutes(coursesToday[0].startTime);
+
   for (const course of coursesToday) {
     const start = timeToMinutes(course.startTime);
     const end = timeToMinutes(course.endTime);
@@ -63,10 +68,6 @@ export function buildDaySlots(coursesToday: Course[]): DaySlot[] {
     }
     slots.push({ kind: "course", course });
     cursor = Math.max(cursor, end);
-  }
-
-  if (cursor < dayEnd) {
-    pushGap(cursor, dayEnd);
   }
 
   return slots;
