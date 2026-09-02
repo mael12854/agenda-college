@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useStore } from "../lib/store";
 import { RECURRENCE_LABELS, recurrenceBadge, weekLetterFor } from "../lib/recurrence";
 import { minutesToDuration, timeToMinutes, weekdayLabel } from "../lib/date";
-import { buildDaySlots } from "../lib/schedule";
+import { buildDaySlots, passingLabel } from "../lib/schedule";
 import { WeekToggle } from "../components/WeekToggle";
 import { useState } from "react";
 import type { Course, Weekday, WeekLetter } from "../lib/types";
@@ -155,7 +155,7 @@ function PassingRow({ row }: { row: Extract<PreviewRow, { kind: "passing" }> }) 
         <span className="courses__passing-time">
           {row.startTime}–{row.endTime}
         </span>
-        <span>Intercours</span>
+        <span>{passingLabel(row.startTime, row.endTime)}</span>
         <span className="courses__passing-duration">{duration}</span>
       </div>
     </li>

@@ -5,13 +5,17 @@ export const SCHOOL_DAY_START = "08:00";
 export const SCHOOL_DAY_END = "17:00";
 
 /**
- * A gap shorter than this is a normal passing period between two classes
- * ("intercours") — not a real "heure de trou". A 5-minute gap doesn't mean
- * you're free, it just means the next class is about to start, so it's
- * still shown (never silently skip time in the schedule) but as a
- * "passing" slot rather than genuine free time.
+ * A gap shorter than this isn't a real "heure de trou" — it's either the
+ * few minutes it takes to change rooms ("intercours") or a récréation-sized
+ * break ("pause"), not genuine free time to reclaim. Still shown (never
+ * silently skip time in the schedule), just not styled as "Tu es libre".
+ * A 15-minute gap is a récréation, not free time, so the threshold sits
+ * above it.
  */
-export const MIN_FREE_SLOT_MINUTES = 15;
+export const MIN_FREE_SLOT_MINUTES = 30;
+
+/** At or below this, a non-free gap reads as "Intercours"; above it, "Pause". */
+export const PASSING_LABEL_MAX_MINUTES = 10;
 
 export interface FreeSlot {
   kind: "free";
@@ -59,6 +63,11 @@ export function buildDaySlots(coursesToday: Course[]): DaySlot[] {
   }
 
   return slots;
+}
+
+export function passingLabel(startTime: string, endTime: string): string {
+  const minutes = timeToMinutes(endTime) - timeToMinutes(startTime);
+  return minutes <= PASSING_LABEL_MAX_MINUTES ? "Intercours" : "Pause";
 }
 
 function minutesToTime(min: number): string {
