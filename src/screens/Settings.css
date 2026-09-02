@@ -17,12 +17,6 @@
   color: var(--color-ink-mute);
 }
 
-.settings__hint {
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--color-ink-soft);
-}
-
 .settings__storage {
   background: var(--color-ink);
   color: var(--color-surface);

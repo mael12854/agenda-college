@@ -28,8 +28,6 @@ export interface Homework {
 
 export interface Settings {
   firstName: string | null;
-  /** Monday of the first week of school, which is always a "semaine A". */
-  termStart: string; // ISO yyyy-mm-dd
 }
 
 export interface AppData {

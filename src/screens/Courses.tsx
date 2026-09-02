@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useStore } from "../lib/store";
-import { RECURRENCE_LABELS, recurrenceBadge, weekLetterFor } from "../lib/recurrence";
+import { RECURRENCE_LABELS, recurrenceBadge, TERM_START, weekLetterFor } from "../lib/recurrence";
 import { minutesToDuration, timeToMinutes, weekdayLabel } from "../lib/date";
 import { buildDaySlots, passingLabel } from "../lib/schedule";
 import { WeekToggle } from "../components/WeekToggle";
@@ -185,8 +185,8 @@ function CourseRow({ course }: { course: Course }) {
 }
 
 export function Courses() {
-  const { courses, settings } = useStore();
-  const actualWeek = weekLetterFor(new Date(), settings.termStart);
+  const { courses } = useStore();
+  const actualWeek = weekLetterFor(new Date(), TERM_START);
   const [previewWeek, setPreviewWeek] = useState<WeekLetter>(actualWeek);
 
   const { dayGroups, otherCourses } = buildWeekPreview(courses, previewWeek);
