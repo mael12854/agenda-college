@@ -7,8 +7,9 @@ export const SCHOOL_DAY_END = "17:00";
 /**
  * A gap shorter than this is a normal passing period between two classes
  * ("intercours") — not a real "heure de trou". A 5-minute gap doesn't mean
- * you're free, it means the next class is about to start, so it's dropped
- * from the schedule entirely rather than shown as free time.
+ * you're free, it just means the next class is about to start, so it's
+ * still shown (never silently skip time in the schedule) but as a
+ * "passing" slot rather than genuine free time.
  */
 export const MIN_FREE_SLOT_MINUTES = 15;
 
@@ -17,40 +18,44 @@ export interface FreeSlot {
   startTime: string;
   endTime: string;
 }
+export interface PassingSlot {
+  kind: "passing";
+  startTime: string;
+  endTime: string;
+}
 export interface CourseSlot {
   kind: "course";
   course: Course;
 }
-export type DaySlot = FreeSlot | CourseSlot;
+export type DaySlot = FreeSlot | PassingSlot | CourseSlot;
 
-/** Merges the day's courses with the gaps between them ("heures de trou"). */
+/** Merges the day's courses with the gaps between them ("heures de trou" and "intercours"). */
 export function buildDaySlots(coursesToday: Course[]): DaySlot[] {
   const slots: DaySlot[] = [];
   let cursor = timeToMinutes(SCHOOL_DAY_START);
   const dayEnd = timeToMinutes(SCHOOL_DAY_END);
 
-  const pushFreeIfReal = (start: number, end: number) => {
-    if (end - start >= MIN_FREE_SLOT_MINUTES) {
-      slots.push({
-        kind: "free",
-        startTime: minutesToTime(start),
-        endTime: minutesToTime(end),
-      });
-    }
+  const pushGap = (start: number, end: number) => {
+    if (end <= start) return;
+    slots.push({
+      kind: end - start >= MIN_FREE_SLOT_MINUTES ? "free" : "passing",
+      startTime: minutesToTime(start),
+      endTime: minutesToTime(end),
+    });
   };
 
   for (const course of coursesToday) {
     const start = timeToMinutes(course.startTime);
     const end = timeToMinutes(course.endTime);
     if (start > cursor) {
-      pushFreeIfReal(cursor, start);
+      pushGap(cursor, start);
     }
     slots.push({ kind: "course", course });
     cursor = Math.max(cursor, end);
   }
 
   if (cursor < dayEnd) {
-    pushFreeIfReal(cursor, dayEnd);
+    pushGap(cursor, dayEnd);
   }
 
   return slots;

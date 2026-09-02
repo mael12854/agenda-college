@@ -115,3 +115,25 @@
   letter-spacing: -0.02em;
   color: var(--color-free-ink-dark);
 }
+
+.day-slot--passing .day-slot__time {
+  padding-top: 8px;
+  font-size: 11px;
+}
+
+.day-slot__block--passing {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px dashed var(--color-surface-lilac-border);
+  color: var(--color-ink-mute);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.day-slot__passing-duration {
+  opacity: 0.7;
+}

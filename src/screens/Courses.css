@@ -116,6 +116,27 @@
   opacity: 1;
 }
 
+.courses__item--passing {
+  background: transparent;
+  border: 1px dashed var(--color-surface-lilac-border);
+  color: var(--color-ink-mute);
+  padding: 8px 14px;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.courses__passing-time {
+  opacity: 0.85;
+}
+
+.courses__passing-duration {
+  opacity: 0.7;
+}
+
 .courses__add {
   display: flex;
   align-items: center;
