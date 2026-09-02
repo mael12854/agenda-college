@@ -1,0 +1,120 @@
+.course-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-ink-mute);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.course-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  min-width: 0;
+}
+
+.course-form__row > * {
+  min-width: 0;
+}
+
+.course-form__input {
+  font-family: var(--font-body);
+  font-size: 16px;
+  border: 2px solid var(--color-surface-lilac-border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: var(--color-card);
+  color: var(--color-ink);
+  width: 100%;
+  min-width: 0;
+}
+
+.course-form__section-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-top: 6px;
+}
+
+.course-form__recurrence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.course-form__recurrence-card {
+  text-align: left;
+  background: var(--color-card);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.course-form__recurrence-card--active {
+  border-color: var(--color-primary);
+}
+
+.course-form__recurrence-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--color-primary);
+}
+
+.course-form__recurrence-hint {
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  line-height: 1.35;
+}
+
+.course-form__ab,
+.course-form__weekday-picker {
+  display: flex;
+  gap: 8px;
+}
+
+.course-form__ab-btn,
+.course-form__weekday-btn {
+  flex: 1;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid var(--color-surface-lilac-border);
+  background: var(--color-card);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.course-form__ab-btn--active,
+.course-form__weekday-btn--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.course-form__note {
+  background: var(--color-surface-lilac);
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-ink-soft);
+}
+
+.course-form__actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
