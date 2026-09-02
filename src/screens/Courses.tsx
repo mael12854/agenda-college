@@ -35,7 +35,8 @@ type PreviewRow =
       endTime: string;
       /** The A/B course that would occupy this exact slot on the other week, if any. */
       altCourse: Course | null;
-    };
+    }
+  | { kind: "passing"; key: string; startTime: string; endTime: string };
 
 interface DayGroup {
   weekday: Weekday;
@@ -82,6 +83,14 @@ function buildWeekPreview(
     const rows: PreviewRow[] = slots.map((slot, i) => {
       if (slot.kind === "course") {
         return { kind: "course", key: slot.course.id, course: slot.course };
+      }
+      if (slot.kind === "passing") {
+        return {
+          kind: "passing",
+          key: `${weekday}-${slot.startTime}-${i}`,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+        };
       }
       const altCourse =
         inactiveAb.find(
@@ -131,6 +140,23 @@ function FreeRow({ row }: { row: Extract<PreviewRow, { kind: "free" }> }) {
               : "Heure de trou"}
           </div>
         </div>
+      </div>
+    </li>
+  );
+}
+
+function PassingRow({ row }: { row: Extract<PreviewRow, { kind: "passing" }> }) {
+  const duration = minutesToDuration(
+    timeToMinutes(row.endTime) - timeToMinutes(row.startTime),
+  );
+  return (
+    <li key={row.key}>
+      <div className="courses__item courses__item--passing">
+        <span className="courses__passing-time">
+          {row.startTime}–{row.endTime}
+        </span>
+        <span>Intercours</span>
+        <span className="courses__passing-duration">{duration}</span>
       </div>
     </li>
   );
@@ -190,13 +216,11 @@ export function Courses() {
                 <span className="courses__day-heading">{weekdayLabel(group.weekday)}</span>
               )}
               <ul className="courses__list">
-                {group.rows.map((row) =>
-                  row.kind === "free" ? (
-                    <FreeRow key={row.key} row={row} />
-                  ) : (
-                    <CourseRow key={row.key} course={row.course} />
-                  ),
-                )}
+                {group.rows.map((row) => {
+                  if (row.kind === "free") return <FreeRow key={row.key} row={row} />;
+                  if (row.kind === "passing") return <PassingRow key={row.key} row={row} />;
+                  return <CourseRow key={row.key} course={row.course} />;
+                })}
               </ul>
             </div>
           ))}

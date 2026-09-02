@@ -33,6 +33,25 @@ export function DaySlotRow({
     );
   }
 
+  if (slot.kind === "passing") {
+    const duration = minutesToDuration(
+      timeToMinutes(slot.endTime) - timeToMinutes(slot.startTime),
+    );
+    return (
+      <div className="day-slot day-slot--passing">
+        <div className="day-slot__time">
+          {slot.startTime}
+          <br />
+          <span className="day-slot__time-end">{slot.endTime}</span>
+        </div>
+        <div className="day-slot__block day-slot__block--passing">
+          <span>Intercours</span>
+          <span className="day-slot__passing-duration">{duration}</span>
+        </div>
+      </div>
+    );
+  }
+
   return <CourseRow course={slot.course} live={live} />;
 }
 
