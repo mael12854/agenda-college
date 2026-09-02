@@ -1,7 +1,7 @@
 import type { Course } from "../lib/types";
 import { minutesToDuration, timeToMinutes } from "../lib/date";
 import { recurrenceBadge } from "../lib/recurrence";
-import type { DaySlot } from "../lib/schedule";
+import { passingLabel, type DaySlot } from "../lib/schedule";
 import "./DaySlotRow.css";
 
 export function DaySlotRow({
@@ -45,7 +45,7 @@ export function DaySlotRow({
           <span className="day-slot__time-end">{slot.endTime}</span>
         </div>
         <div className="day-slot__block day-slot__block--passing">
-          <span>Intercours</span>
+          <span>{passingLabel(slot.startTime, slot.endTime)}</span>
           <span className="day-slot__passing-duration">{duration}</span>
         </div>
       </div>

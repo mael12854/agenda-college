@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDaySlots } from "./schedule";
+import { buildDaySlots, passingLabel } from "./schedule";
 import type { Course } from "./types";
 
 function course(id: string, startTime: string, endTime: string): Course {
@@ -27,21 +27,22 @@ describe("buildDaySlots", () => {
     expect(passing[1]).toMatchObject({ startTime: "08:55", endTime: "09:00" });
   });
 
-  it("still reports a real gap of 15 minutes or more as 'free'", () => {
-    // Spans the whole school day except the 09:55-11:00 gap, isolating it
-    // (no leading/trailing gap to confuse the assertion).
-    const slots = buildDaySlots([course("a", "08:00", "09:55"), course("b", "11:00", "17:00")]);
+  it("treats a 15-minute récréation as 'passing', not free time", () => {
+    // Isolates a single 15-minute gap (09:55-10:10).
+    const slots = buildDaySlots([course("a", "08:00", "09:55"), course("b", "10:10", "17:00")]);
     const free = slots.filter((s) => s.kind === "free");
-    expect(free).toHaveLength(1);
-    expect(free[0]).toMatchObject({ startTime: "09:55", endTime: "11:00" });
+    const passing = slots.filter((s) => s.kind === "passing");
+    expect(free).toHaveLength(0);
+    expect(passing).toHaveLength(1);
+    expect(passing[0]).toMatchObject({ startTime: "09:55", endTime: "10:10" });
   });
 
-  it("labels a short trailing gap at the end of the school day as 'passing'", () => {
-    // Spans the whole school day except the last 5 minutes, isolating the
-    // trailing gap (no leading/mid gap to confuse the assertion).
-    const slots = buildDaySlots([course("a", "08:00", "16:55")]);
-    const trailing = slots.at(-1);
-    expect(trailing).toMatchObject({ kind: "passing", startTime: "16:55", endTime: "17:00" });
+  it("still reports a real gap of 30 minutes or more as 'free'", () => {
+    // Isolates a single 55-minute gap (09:55-10:50).
+    const slots = buildDaySlots([course("a", "08:00", "09:55"), course("b", "10:50", "17:00")]);
+    const free = slots.filter((s) => s.kind === "free");
+    expect(free).toHaveLength(1);
+    expect(free[0]).toMatchObject({ startTime: "09:55", endTime: "10:50" });
   });
 
   it("never leaves a gap unaccounted for — every minute of the day is covered", () => {
@@ -53,5 +54,17 @@ describe("buildDaySlots", () => {
       const nextStart = next.kind === "course" ? next.course.startTime : next.startTime;
       expect(currentEnd).toBe(nextStart);
     }
+  });
+});
+
+describe("passingLabel", () => {
+  it("reads 'Intercours' for a short room-change gap", () => {
+    expect(passingLabel("08:55", "09:00")).toBe("Intercours");
+    expect(passingLabel("08:55", "09:05")).toBe("Intercours"); // exactly 10 min
+  });
+
+  it("reads 'Pause' for a récréation-sized gap", () => {
+    expect(passingLabel("09:55", "10:10")).toBe("Pause"); // 15 min
+    expect(passingLabel("09:55", "10:25")).toBe("Pause"); // 29 min, still under the free threshold
   });
 });
