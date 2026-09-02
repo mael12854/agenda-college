@@ -15,16 +15,20 @@ function course(id: string, startTime: string, endTime: string): Course {
 }
 
 describe("buildDaySlots", () => {
+  it("never shows a gap before the first class of the day", () => {
+    // First class starts well after SCHOOL_DAY_START (08:00) — there must
+    // be no leading "Intercours"/"Pause"/free slot before it.
+    const slots = buildDaySlots([course("a", "08:05", "08:55"), course("b", "10:10", "17:00")]);
+    expect(slots[0]).toMatchObject({ kind: "course", course: { id: "a" } });
+  });
+
   it("labels a 5-minute passing period as 'passing', not a heure de trou", () => {
-    // Spans the rest of the school day after 09:00, so the only candidate
-    // gaps are the leading (08:00-08:05) and mid (08:55-09:00) 5-min ones.
     const slots = buildDaySlots([course("a", "08:05", "08:55"), course("b", "09:00", "17:00")]);
     const free = slots.filter((s) => s.kind === "free");
     const passing = slots.filter((s) => s.kind === "passing");
     expect(free).toHaveLength(0);
-    expect(passing).toHaveLength(2);
-    expect(passing[0]).toMatchObject({ startTime: "08:00", endTime: "08:05" });
-    expect(passing[1]).toMatchObject({ startTime: "08:55", endTime: "09:00" });
+    expect(passing).toHaveLength(1);
+    expect(passing[0]).toMatchObject({ startTime: "08:55", endTime: "09:00" });
   });
 
   it("treats a 15-minute récréation as 'passing', not free time", () => {
@@ -43,6 +47,11 @@ describe("buildDaySlots", () => {
     const free = slots.filter((s) => s.kind === "free");
     expect(free).toHaveLength(1);
     expect(free[0]).toMatchObject({ startTime: "09:55", endTime: "10:50" });
+  });
+
+  it("shows the whole school day as free when there are no classes at all", () => {
+    const slots = buildDaySlots([]);
+    expect(slots).toEqual([{ kind: "free", startTime: "08:00", endTime: "17:00" }]);
   });
 
   it("never leaves a gap unaccounted for — every minute of the day is covered", () => {
