@@ -4,6 +4,7 @@ import { addDays, formatDayHeading, isSameDate } from "../lib/date";
 import { coursesOn } from "../lib/recurrence";
 import { buildDaySlots, isLiveNow } from "../lib/schedule";
 import { findNextCourse } from "../lib/nextCourse";
+import { useNow } from "../lib/useNow";
 import { DaySlotRow } from "../components/DaySlotRow";
 import { NextCourseCard } from "../components/NextCourseCard";
 import "./Today.css";
@@ -11,7 +12,7 @@ import "./Today.css";
 export function Today() {
   const { settings, courses, homework } = useStore();
   const [offset, setOffset] = useState(0);
-  const now = useMemo(() => new Date(), []);
+  const now = useNow();
   const date = useMemo(() => addDays(now, offset), [now, offset]);
   const today = isSameDate(date, now);
 
