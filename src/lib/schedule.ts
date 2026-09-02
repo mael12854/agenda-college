@@ -4,6 +4,14 @@ import { timeToMinutes } from "./date";
 export const SCHOOL_DAY_START = "08:00";
 export const SCHOOL_DAY_END = "17:00";
 
+/**
+ * A gap shorter than this is a normal passing period between two classes
+ * ("intercours") — not a real "heure de trou". A 5-minute gap doesn't mean
+ * you're free, it means the next class is about to start, so it's dropped
+ * from the schedule entirely rather than shown as free time.
+ */
+export const MIN_FREE_SLOT_MINUTES = 15;
+
 export interface FreeSlot {
   kind: "free";
   startTime: string;
@@ -21,26 +29,28 @@ export function buildDaySlots(coursesToday: Course[]): DaySlot[] {
   let cursor = timeToMinutes(SCHOOL_DAY_START);
   const dayEnd = timeToMinutes(SCHOOL_DAY_END);
 
+  const pushFreeIfReal = (start: number, end: number) => {
+    if (end - start >= MIN_FREE_SLOT_MINUTES) {
+      slots.push({
+        kind: "free",
+        startTime: minutesToTime(start),
+        endTime: minutesToTime(end),
+      });
+    }
+  };
+
   for (const course of coursesToday) {
     const start = timeToMinutes(course.startTime);
     const end = timeToMinutes(course.endTime);
     if (start > cursor) {
-      slots.push({
-        kind: "free",
-        startTime: minutesToTime(cursor),
-        endTime: minutesToTime(start),
-      });
+      pushFreeIfReal(cursor, start);
     }
     slots.push({ kind: "course", course });
     cursor = Math.max(cursor, end);
   }
 
   if (cursor < dayEnd) {
-    slots.push({
-      kind: "free",
-      startTime: minutesToTime(cursor),
-      endTime: minutesToTime(dayEnd),
-    });
+    pushFreeIfReal(cursor, dayEnd);
   }
 
   return slots;
