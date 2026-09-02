@@ -2,6 +2,13 @@ import type { Course, WeekLetter } from "./types";
 import { fromISODate, mondayOf, toWeekday } from "./date";
 
 /**
+ * The Monday of the school year's first week — always "semaine A". Not
+ * user-configurable: it's a fixed fact about this school year, not a
+ * per-student setting.
+ */
+export const TERM_START = "2026-08-31";
+
+/**
  * The term-start Monday is always "semaine A". Week letters alternate every
  * ISO week from there, so we only need the number of weeks between the two
  * Mondays (mod 2) to know which letter a given date falls in.

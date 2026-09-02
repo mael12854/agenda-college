@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useStore } from "../lib/store";
 import { addDays, formatDayHeading, isSameDate } from "../lib/date";
-import { coursesOn } from "../lib/recurrence";
+import { coursesOn, TERM_START } from "../lib/recurrence";
 import { buildDaySlots, isLiveNow } from "../lib/schedule";
 import { findNextCourse } from "../lib/nextCourse";
 import { useNow } from "../lib/useNow";
@@ -17,8 +17,8 @@ export function Today() {
   const today = isSameDate(date, now);
 
   const todaysCourses = useMemo(
-    () => coursesOn(courses, date, settings.termStart),
-    [courses, date, settings.termStart],
+    () => coursesOn(courses, date, TERM_START),
+    [courses, date],
   );
   const slots = useMemo(() => buildDaySlots(todaysCourses), [todaysCourses]);
 
@@ -28,8 +28,8 @@ export function Today() {
   );
 
   const nextCourse = useMemo(
-    () => findNextCourse(courses, now, settings.termStart),
-    [courses, now, settings.termStart],
+    () => findNextCourse(courses, now, TERM_START),
+    [courses, now],
   );
 
   return (

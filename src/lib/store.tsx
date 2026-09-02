@@ -7,20 +7,13 @@ import {
   type ReactNode,
 } from "react";
 import type { AppData, Course, Homework } from "./types";
-import {
-  loadData,
-  saveCourses,
-  saveFirstName,
-  saveHomework,
-  saveTermStart,
-} from "./storage";
+import { loadData, saveCourses, saveFirstName, saveHomework } from "./storage";
 
 interface StoreValue extends AppData {
   setFirstName: (name: string) => void;
   addCourse: (course: Course) => void;
   updateCourse: (course: Course) => void;
   removeCourse: (id: string) => void;
-  setTermStart: (iso: string) => void;
   addHomework: (hw: Homework) => void;
   toggleHomework: (id: string) => void;
   removeHomework: (id: string) => void;
@@ -34,11 +27,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const setFirstName = useCallback((name: string) => {
     saveFirstName(name);
     setData((d) => ({ ...d, settings: { ...d.settings, firstName: name } }));
-  }, []);
-
-  const setTermStart = useCallback((iso: string) => {
-    saveTermStart(iso);
-    setData((d) => ({ ...d, settings: { ...d.settings, termStart: iso } }));
   }, []);
 
   const addCourse = useCallback((course: Course) => {
@@ -98,7 +86,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addCourse,
       updateCourse,
       removeCourse,
-      setTermStart,
       addHomework,
       toggleHomework,
       removeHomework,
@@ -109,7 +96,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addCourse,
       updateCourse,
       removeCourse,
-      setTermStart,
       addHomework,
       toggleHomework,
       removeHomework,
