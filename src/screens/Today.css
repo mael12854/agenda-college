@@ -1,0 +1,56 @@
+.today__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.today__nav {
+  display: flex;
+  gap: 6px;
+}
+
+.today__nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-card);
+  color: var(--color-ink);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.today__summary {
+  color: var(--color-ink-soft);
+  font-size: 15px;
+}
+
+.today__empty {
+  color: var(--color-ink-mute);
+  text-align: center;
+  padding: 32px 18px;
+}
+
+.today__slots {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.today__homework {
+  margin-top: 4px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: var(--color-homework);
+  color: var(--color-homework-ink);
+  border-radius: var(--radius-block);
+  padding: 14px 18px;
+}
+
+.today__homework-count {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+}

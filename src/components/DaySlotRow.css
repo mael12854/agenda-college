@@ -1,0 +1,117 @@
+.day-slot {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.day-slot__time {
+  width: 54px;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-ink-mute);
+  padding-top: 16px;
+  text-align: right;
+}
+.day-slot__time-end {
+  opacity: 0.5;
+}
+
+.day-slot__block {
+  flex: 1;
+  border-radius: var(--radius-block);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.day-slot__block--course {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.day-slot__block--live {
+  background: var(--color-live);
+  color: #ffffff;
+}
+
+.day-slot__block--free {
+  background: var(--color-free-bg);
+  border: 3px dashed var(--color-free);
+  gap: 6px;
+}
+
+.day-slot__course-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.day-slot__course-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.day-slot__badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.day-slot__course-meta {
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+.day-slot__live-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.day-slot__live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.day-slot__free-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.day-slot__free-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--color-free-ink);
+}
+
+.day-slot__free-duration {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-free-ink);
+}
+
+.day-slot__free-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--color-free-ink-dark);
+}
