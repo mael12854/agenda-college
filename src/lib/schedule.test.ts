@@ -49,6 +49,13 @@ describe("buildDaySlots", () => {
     expect(free[0]).toMatchObject({ startTime: "09:55", endTime: "10:50" });
   });
 
+  it("never shows a gap after the last class of the day", () => {
+    // Last class ends well before SCHOOL_DAY_END (17:00) — there must be
+    // no trailing "heure de trou" after it.
+    const slots = buildDaySlots([course("a", "08:05", "08:55"), course("b", "10:10", "10:55")]);
+    expect(slots.at(-1)).toMatchObject({ kind: "course", course: { id: "b" } });
+  });
+
   it("shows the whole school day as free when there are no classes at all", () => {
     const slots = buildDaySlots([]);
     expect(slots).toEqual([{ kind: "free", startTime: "08:00", endTime: "17:00" }]);
