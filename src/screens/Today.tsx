@@ -3,7 +3,9 @@ import { useStore } from "../lib/store";
 import { addDays, formatDayHeading, isSameDate } from "../lib/date";
 import { coursesOn } from "../lib/recurrence";
 import { buildDaySlots, isLiveNow } from "../lib/schedule";
+import { findNextCourse } from "../lib/nextCourse";
 import { DaySlotRow } from "../components/DaySlotRow";
+import { NextCourseCard } from "../components/NextCourseCard";
 import "./Today.css";
 
 export function Today() {
@@ -22,6 +24,11 @@ export function Today() {
   const pendingHomework = useMemo(
     () => homework.filter((h) => !h.done),
     [homework],
+  );
+
+  const nextCourse = useMemo(
+    () => findNextCourse(courses, now, settings.termStart),
+    [courses, now, settings.termStart],
   );
 
   return (
@@ -50,6 +57,9 @@ export function Today() {
         </div>
       </div>
       <h1 className="title-xl">{formatDayHeading(date)}</h1>
+
+      {today && <NextCourseCard next={nextCourse} now={now} />}
+
       <p className="today__summary">
         {todaysCourses.length === 0
           ? "Aucun cours ce jour."

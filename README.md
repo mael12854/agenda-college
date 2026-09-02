@@ -17,6 +17,10 @@ Basé sur les [brand guidelines Créno](https://claude.ai/design) (violet
   1×/mois, ou ponctuel. La semaine de la rentrée sert de référence pour
   calculer l'alternance A/B.
 - **Devoirs** — liste simple à cocher, avec date de rendu.
+- **Prochain cours** — mis en avant sur l'écran du jour : la prochaine
+  occurrence à venir (aujourd'hui ou plus tard), avec le temps restant.
+- **Installable** — `manifest.json` + service worker (via `vite-plugin-pwa`) :
+  « Ajouter à l'écran d'accueil » depuis le navigateur, fonctionne hors ligne.
 
 ## Développement
 

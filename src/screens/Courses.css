@@ -10,6 +10,21 @@
   padding: 28px 18px;
 }
 
+.courses__day-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.courses__day-heading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-mute);
+  padding: 0 2px;
+}
+
 .courses__list {
   list-style: none;
   margin: 0;
