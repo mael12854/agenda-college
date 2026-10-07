@@ -116,6 +116,18 @@
   opacity: 1;
 }
 
+.courses__item--lunch {
+  background: var(--color-lunch-bg);
+  border-color: var(--color-lunch);
+  color: var(--color-lunch-ink-dark);
+}
+.courses__item--lunch .courses__badge--free {
+  color: var(--color-lunch-ink);
+}
+.courses__item--lunch .courses__meta {
+  color: var(--color-lunch-ink-body);
+}
+
 .courses__item--passing {
   background: transparent;
   border: 1px dashed var(--color-surface-lilac-border);

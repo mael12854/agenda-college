@@ -150,7 +150,7 @@ function LunchRow({ row }: { row: Extract<PreviewRow, { kind: "lunch" }> }) {
   );
   return (
     <li key={row.key}>
-      <div className="courses__item courses__item--free">
+      <div className="courses__item courses__item--free courses__item--lunch">
         <div className="courses__time">
           {row.startTime}
           <br />

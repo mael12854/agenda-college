@@ -10,6 +10,11 @@
   --color-free-ink-dark: #0b3b2e;
   --color-free-ink-body: #0e5c48;
   --color-free-bg: #e4fbf3;
+  --color-lunch: #f2c200; /* Jaune déj — pause déjeuner */
+  --color-lunch-ink: #8a6a00;
+  --color-lunch-ink-dark: #3d2f00;
+  --color-lunch-ink-body: #6b5200;
+  --color-lunch-bg: #fff8d9;
   --color-live: #ff4d8d; /* Rose live — cours en cours */
   --color-homework: #ff9a3c; /* Orange — devoirs / rappels */
   --color-homework-ink: #3a1b00;

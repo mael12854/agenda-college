@@ -23,7 +23,12 @@ export function DaySlotRow({
           <br />
           <span className="day-slot__time-end">{slot.endTime}</span>
         </div>
-        <div className="day-slot__block day-slot__block--free">
+        <div
+          className={
+            "day-slot__block day-slot__block--free" +
+            (lunch ? " day-slot__block--lunch" : "")
+          }
+        >
           <div className="day-slot__free-head">
             <span className="day-slot__free-label">
               {lunch ? "Pause déjeuner" : "Heure de trou"}
