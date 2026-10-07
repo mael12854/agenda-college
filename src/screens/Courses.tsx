@@ -36,7 +36,8 @@ type PreviewRow =
       /** The A/B course that would occupy this exact slot on the other week, if any. */
       altCourse: Course | null;
     }
-  | { kind: "passing"; key: string; startTime: string; endTime: string };
+  | { kind: "passing"; key: string; startTime: string; endTime: string }
+  | { kind: "lunch"; key: string; startTime: string; endTime: string };
 
 interface DayGroup {
   weekday: Weekday;
@@ -84,13 +85,11 @@ function buildWeekPreview(
       if (slot.kind === "course") {
         return { kind: "course", key: slot.course.id, course: slot.course };
       }
-      if (slot.kind === "passing") {
-        return {
-          kind: "passing",
-          key: `${weekday}-${slot.startTime}-${i}`,
-          startTime: slot.startTime,
-          endTime: slot.endTime,
-        };
+      if (slot.kind === "passing" || slot.kind === "lunch") {
+        const key = `${weekday}-${slot.startTime}-${i}`;
+        return slot.kind === "lunch"
+          ? { kind: "lunch", key, startTime: slot.startTime, endTime: slot.endTime }
+          : { kind: "passing", key, startTime: slot.startTime, endTime: slot.endTime };
       }
       const altCourse =
         inactiveAb.find(
@@ -139,6 +138,30 @@ function FreeRow({ row }: { row: Extract<PreviewRow, { kind: "free" }> }) {
               ? `Pas de ${row.altCourse.subject.toLowerCase()} cette semaine`
               : "Heure de trou"}
           </div>
+        </div>
+      </div>
+    </li>
+  );
+}
+
+function LunchRow({ row }: { row: Extract<PreviewRow, { kind: "lunch" }> }) {
+  const duration = minutesToDuration(
+    timeToMinutes(row.endTime) - timeToMinutes(row.startTime),
+  );
+  return (
+    <li key={row.key}>
+      <div className="courses__item courses__item--free">
+        <div className="courses__time">
+          {row.startTime}
+          <br />
+          <span className="courses__time-end">{row.endTime}</span>
+        </div>
+        <div className="courses__body">
+          <div className="courses__head">
+            <span className="courses__name">Pause déjeuner</span>
+            <span className="courses__badge courses__badge--free">{duration}</span>
+          </div>
+          <div className="courses__meta">Bon appétit</div>
         </div>
       </div>
     </li>
@@ -218,6 +241,7 @@ export function Courses() {
               <ul className="courses__list">
                 {group.rows.map((row) => {
                   if (row.kind === "free") return <FreeRow key={row.key} row={row} />;
+                  if (row.kind === "lunch") return <LunchRow key={row.key} row={row} />;
                   if (row.kind === "passing") return <PassingRow key={row.key} row={row} />;
                   return <CourseRow key={row.key} course={row.course} />;
                 })}

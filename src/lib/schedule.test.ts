@@ -56,6 +56,31 @@ describe("buildDaySlots", () => {
     expect(slots.at(-1)).toMatchObject({ kind: "course", course: { id: "b" } });
   });
 
+  it("labels a real midday gap as the pause déjeuner, not an heure de trou", () => {
+    const slots = buildDaySlots([
+      course("a", "08:00", "11:55"),
+      course("b", "13:30", "15:00"),
+      course("c", "16:00", "17:00"),
+    ]);
+    expect(slots.filter((s) => s.kind === "lunch")).toEqual([
+      { kind: "lunch", startTime: "11:55", endTime: "13:30" },
+    ]);
+    // The afternoon gap is still a normal heure de trou.
+    expect(slots.filter((s) => s.kind === "free")).toEqual([
+      { kind: "free", startTime: "15:00", endTime: "16:00" },
+    ]);
+  });
+
+  it("recognises a second-service lunch (12:55-14:00)", () => {
+    const slots = buildDaySlots([course("a", "08:00", "12:55"), course("b", "14:00", "17:00")]);
+    expect(slots[1]).toMatchObject({ kind: "lunch", startTime: "12:55", endTime: "14:00" });
+  });
+
+  it("doesn't call a short midday gap a lunch break", () => {
+    const slots = buildDaySlots([course("a", "08:00", "11:55"), course("b", "12:00", "17:00")]);
+    expect(slots.some((s) => s.kind === "lunch")).toBe(false);
+  });
+
   it("shows the whole school day as free when there are no classes at all", () => {
     const slots = buildDaySlots([]);
     expect(slots).toEqual([{ kind: "free", startTime: "08:00", endTime: "17:00" }]);
