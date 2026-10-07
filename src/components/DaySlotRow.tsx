@@ -11,7 +11,8 @@ export function DaySlotRow({
   slot: DaySlot;
   live: boolean;
 }) {
-  if (slot.kind === "free") {
+  if (slot.kind === "free" || slot.kind === "lunch") {
+    const lunch = slot.kind === "lunch";
     const duration = minutesToDuration(
       timeToMinutes(slot.endTime) - timeToMinutes(slot.startTime),
     );
@@ -24,10 +25,12 @@ export function DaySlotRow({
         </div>
         <div className="day-slot__block day-slot__block--free">
           <div className="day-slot__free-head">
-            <span className="day-slot__free-label">Heure de trou</span>
+            <span className="day-slot__free-label">
+              {lunch ? "Pause déjeuner" : "Heure de trou"}
+            </span>
             <span className="day-slot__free-duration">{duration}</span>
           </div>
-          <div className="day-slot__free-title">Tu es libre</div>
+          <div className="day-slot__free-title">{lunch ? "Bon appétit" : "Tu es libre"}</div>
         </div>
       </div>
     );

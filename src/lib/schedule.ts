@@ -17,6 +17,14 @@ export const MIN_FREE_SLOT_MINUTES = 30;
 /** At or below this, a non-free gap reads as "Intercours"; above it, "Pause". */
 export const PASSING_LABEL_MAX_MINUTES = 10;
 
+/**
+ * A real gap (≥ MIN_FREE_SLOT_MINUTES) that overlaps this midday window is
+ * the "pause déjeuner", not an "heure de trou" — whether you eat at the
+ * first service (11:55-13:30) or the second (12:55-14:00).
+ */
+export const LUNCH_WINDOW_START = "11:30";
+export const LUNCH_WINDOW_END = "14:00";
+
 export interface FreeSlot {
   kind: "free";
   startTime: string;
@@ -27,32 +35,47 @@ export interface PassingSlot {
   startTime: string;
   endTime: string;
 }
+export interface LunchSlot {
+  kind: "lunch";
+  startTime: string;
+  endTime: string;
+}
 export interface CourseSlot {
   kind: "course";
   course: Course;
 }
-export type DaySlot = FreeSlot | PassingSlot | CourseSlot;
+export type DaySlot = FreeSlot | PassingSlot | LunchSlot | CourseSlot;
 
-/** Merges the day's courses with the gaps between them ("heures de trou" and "intercours"). */
+/**
+ * Merges the day's courses with the gaps between them ("heures de trou",
+ * "pause déjeuner" and "intercours").
+ */
 export function buildDaySlots(coursesToday: Course[]): DaySlot[] {
   const slots: DaySlot[] = [];
-
-  const pushGap = (start: number, end: number) => {
-    if (end <= start) return;
-    slots.push({
-      kind: end - start >= MIN_FREE_SLOT_MINUTES ? "free" : "passing",
-      startTime: minutesToTime(start),
-      endTime: minutesToTime(end),
-    });
-  };
 
   // A day with no classes at all has no first/last course to anchor on, so
   // it falls back to the generic SCHOOL_DAY_START-SCHOOL_DAY_END window,
   // shown as one free block.
   if (coursesToday.length === 0) {
-    pushGap(timeToMinutes(SCHOOL_DAY_START), timeToMinutes(SCHOOL_DAY_END));
+    slots.push({ kind: "free", startTime: SCHOOL_DAY_START, endTime: SCHOOL_DAY_END });
     return slots;
   }
+
+  const lunchStart = timeToMinutes(LUNCH_WINDOW_START);
+  const lunchEnd = timeToMinutes(LUNCH_WINDOW_END);
+  let hadLunch = false;
+
+  const pushGap = (start: number, end: number) => {
+    if (end <= start) return;
+    let kind: "free" | "passing" | "lunch" =
+      end - start >= MIN_FREE_SLOT_MINUTES ? "free" : "passing";
+    // Only one lunch break a day: the first real midday gap.
+    if (kind === "free" && !hadLunch && start < lunchEnd && end > lunchStart) {
+      kind = "lunch";
+      hadLunch = true;
+    }
+    slots.push({ kind, startTime: minutesToTime(start), endTime: minutesToTime(end) });
+  };
 
   // Otherwise the timeline runs from the first class to the last — never a
   // fixed wall-clock time. There's no "heure de trou" before your day has
