@@ -116,6 +116,18 @@
   color: var(--color-free-ink-dark);
 }
 
+.day-slot__block--lunch {
+  background: var(--color-lunch-bg);
+  border-color: var(--color-lunch);
+}
+.day-slot__block--lunch .day-slot__free-label,
+.day-slot__block--lunch .day-slot__free-duration {
+  color: var(--color-lunch-ink);
+}
+.day-slot__block--lunch .day-slot__free-title {
+  color: var(--color-lunch-ink-dark);
+}
+
 .day-slot--passing .day-slot__time {
   padding-top: 8px;
   font-size: 11px;
