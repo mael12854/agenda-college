@@ -1,0 +1,65 @@
+.ical-sync {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ical-sync__saved {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-ink-mute);
+}
+
+.ical-sync__row {
+  display: flex;
+  gap: 8px;
+}
+
+.ical-sync__input {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ical-sync__btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  border: 2px solid var(--color-primary);
+  border-radius: 16px;
+  padding: 12px 16px;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ical-sync__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ical-sync__forget {
+  font-family: var(--font-body);
+  font-size: 13px;
+  border: none;
+  background: transparent;
+  color: var(--color-ink-mute);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 12px 4px;
+}
+
+.ical-sync__hint {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-ink-mute);
+}
+
+.ical-sync__feedback {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-free-ink);
+}
+.ical-sync__feedback--error {
+  color: var(--color-danger);
+}

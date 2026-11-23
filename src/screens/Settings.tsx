@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useStore } from "../lib/store";
 import { ImportScheduleButton } from "../components/ImportScheduleButton";
+import { IcalSyncPanel } from "../components/IcalSyncPanel";
 import { ConfirmModal } from "../components/ConfirmModal";
 import "./Settings.css";
 
@@ -28,17 +29,24 @@ export function Settings() {
       </div>
 
       <div className="card settings__field">
-        <span className="settings__label">Emploi du temps</span>
+        <span className="settings__label">Lien iCal EcoleDirecte</span>
+        <IcalSyncPanel />
+      </div>
+
+      <div className="card settings__field">
+        <span className="settings__label">Importer un JSON</span>
         <ImportScheduleButton />
       </div>
 
       <div className="settings__storage">
         <span className="eyebrow" style={{ color: "var(--color-homework)" }}>
-          Stockage local · pas de serveur
+          Stockage local
         </span>
         <p>
           Prénom, cours et devoirs vivent dans le stockage de ce navigateur,
-          sur cet appareil.
+          sur cet appareil. La synchronisation iCal passe par un relais
+          technique qui ne fait que transmettre le calendrier — il ne stocke
+          rien.
         </p>
       </div>
 

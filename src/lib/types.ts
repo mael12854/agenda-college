@@ -37,6 +37,8 @@ export interface Homework {
 
 export interface Settings {
   firstName: string | null;
+  /** The student's own EcoleDirecte iCal subscribe link, if they've saved one. */
+  icalUrl: string | null;
 }
 
 export interface AppData {

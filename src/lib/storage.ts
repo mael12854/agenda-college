@@ -10,6 +10,8 @@ import type { AppData, Course, Homework, Settings } from "./types";
 const KEY_PRENOM = "creno.prenom";
 const KEY_COURS = "creno.cours";
 const KEY_DEVOIRS = "creno.devoirs";
+/** The student's own EcoleDirecte iCal link, saved so "Resynchroniser" is one tap. Never sent anywhere but api/ics-proxy. */
+const KEY_ICAL_URL = "creno.icalUrl";
 
 function read<T>(key: string, fallback: T): T {
   try {
@@ -28,6 +30,7 @@ function write<T>(key: string, value: T): void {
 export function loadData(): AppData {
   const settings: Settings = {
     firstName: read<string | null>(KEY_PRENOM, null),
+    icalUrl: read<string | null>(KEY_ICAL_URL, null),
   };
   const courses = read<Course[]>(KEY_COURS, []);
   const homework = read<Homework[]>(KEY_DEVOIRS, []);
@@ -37,6 +40,11 @@ export function loadData(): AppData {
 export function saveFirstName(name: string | null): void {
   if (name === null) localStorage.removeItem(KEY_PRENOM);
   else write(KEY_PRENOM, name);
+}
+
+export function saveIcalUrl(url: string | null): void {
+  if (url === null) localStorage.removeItem(KEY_ICAL_URL);
+  else write(KEY_ICAL_URL, url);
 }
 
 export function saveCourses(courses: Course[]): void {
