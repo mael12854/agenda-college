@@ -36,6 +36,29 @@
   color: #ffffff;
 }
 
+.day-slot__block--cancelled {
+  background: var(--color-status-annule-bg);
+  color: var(--color-status-annule);
+}
+.day-slot__block--cancelled .day-slot__course-name {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.day-slot__block--tappable {
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
+.day-slot__badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .day-slot__block--free {
   background: var(--color-free-bg);
   border: 3px dashed var(--color-free);

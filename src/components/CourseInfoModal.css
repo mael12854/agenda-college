@@ -1,0 +1,65 @@
+.course-info-modal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-card);
+  border-radius: 24px;
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow-card);
+}
+
+.course-info-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.course-info-modal__time {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-ink-mute);
+}
+
+.course-info-modal__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+.course-info-modal__meta {
+  font-size: 15px;
+  color: var(--color-ink-soft);
+}
+
+.course-info-modal__note {
+  background: var(--color-surface-lilac);
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+
+.course-info-modal__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.course-info-modal__actions .button-ghost {
+  flex: 1;
+  text-align: center;
+}
+
+.course-info-modal__edit {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

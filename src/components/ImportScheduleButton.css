@@ -1,0 +1,27 @@
+.import-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.import-schedule__btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  border: 2px solid var(--color-primary);
+  border-radius: 16px;
+  padding: 12px;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.import-schedule__feedback {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-free-ink);
+}
+
+.import-schedule__feedback--error {
+  color: var(--color-danger);
+}

@@ -8,6 +8,9 @@ export type Recurrence =
   | { type: "monthly"; dayOfMonth: number }
   | { type: "once"; date: string }; // ISO yyyy-mm-dd
 
+/** "normal" when absent — most courses never set this field at all. */
+export type CourseStatus = "normal" | "remplace" | "controle" | "annule";
+
 export interface Course {
   id: string;
   subject: string;
@@ -16,6 +19,12 @@ export interface Course {
   startTime: string; // "HH:MM"
   endTime: string; // "HH:MM"
   recurrence: Recurrence;
+  /** Defaults to "normal" when absent. */
+  status?: CourseStatus;
+  /** The usual teacher, when `teacher` is standing in for them (a "remplace"/"controle" course). */
+  substituteFor?: string;
+  /** Free-text detail shown when the course is tapped (e.g. why a class was cancelled). */
+  note?: string;
 }
 
 export interface Homework {
