@@ -32,3 +32,32 @@
   line-height: 1.45;
   opacity: 0.85;
 }
+
+.settings__danger-zone {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.settings__danger-btn {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--color-danger);
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: transparent;
+  color: var(--color-danger);
+  cursor: pointer;
+}
+.settings__danger-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.settings__danger-feedback {
+  font-size: 13px;
+  color: var(--color-ink-mute);
+}

@@ -5,13 +5,17 @@ import { coursesOn, TERM_START } from "../lib/recurrence";
 import { buildDaySlots, isLiveNow } from "../lib/schedule";
 import { findNextCourse } from "../lib/nextCourse";
 import { useNow } from "../lib/useNow";
+import type { Course } from "../lib/types";
 import { DaySlotRow } from "../components/DaySlotRow";
 import { NextCourseCard } from "../components/NextCourseCard";
+import { CourseInfoModal } from "../components/CourseInfoModal";
+import { ImportScheduleButton } from "../components/ImportScheduleButton";
 import "./Today.css";
 
 export function Today() {
   const { settings, courses, homework } = useStore();
   const [offset, setOffset] = useState(0);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const now = useNow();
   const date = useMemo(() => addDays(now, offset), [now, offset]);
   const today = isSameDate(date, now);
@@ -31,6 +35,21 @@ export function Today() {
     () => findNextCourse(courses, now, TERM_START),
     [courses, now],
   );
+
+  if (courses.length === 0) {
+    return (
+      <div className="screen">
+        <span className="eyebrow">
+          {settings.firstName ? `Salut ${settings.firstName}` : "Ta journée"}
+        </span>
+        <h1 className="title-xl">Ta journée</h1>
+        <div className="card today__empty">
+          Aucun emploi du temps — importe un JSON pour commencer.
+        </div>
+        <ImportScheduleButton />
+      </div>
+    );
+  }
 
   return (
     <div className="screen">
@@ -82,6 +101,7 @@ export function Today() {
                 slot.kind === "course" &&
                 isLiveNow(slot.course, now)
               }
+              onSelectCourse={setSelectedCourse}
             />
           ))}
         </div>
@@ -94,6 +114,10 @@ export function Today() {
             devoir{pendingHomework.length > 1 ? "s" : ""} à rendre
           </span>
         </div>
+      )}
+
+      {selectedCourse && (
+        <CourseInfoModal course={selectedCourse} onClose={() => setSelectedCourse(null)} />
       )}
     </div>
   );

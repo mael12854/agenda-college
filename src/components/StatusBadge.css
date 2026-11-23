@@ -1,0 +1,25 @@
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.status-badge--remplace {
+  background: var(--color-status-remplace-bg);
+  color: var(--color-status-remplace);
+}
+
+.status-badge--controle {
+  background: var(--color-status-controle-bg);
+  color: var(--color-status-controle);
+  font-weight: 700;
+}
+
+.status-badge--annule {
+  background: var(--color-status-annule-bg);
+  color: var(--color-status-annule);
+}

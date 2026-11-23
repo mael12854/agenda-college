@@ -81,6 +81,11 @@ export function CourseForm() {
       startTime,
       endTime,
       recurrence: buildRecurrence(),
+      // Status/substitute/note come from an import, not this form — keep
+      // them as they were so editing a course doesn't silently drop them.
+      status: editing?.status,
+      substituteFor: editing?.substituteFor,
+      note: editing?.note,
     };
 
     if (editing) updateCourse(course);

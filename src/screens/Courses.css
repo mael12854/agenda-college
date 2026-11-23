@@ -44,6 +44,29 @@
   padding: 14px 16px;
 }
 
+.courses__item--button {
+  width: 100%;
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.courses__item--cancelled {
+  background: var(--color-status-annule-bg);
+  color: var(--color-status-annule);
+}
+.courses__item--cancelled .courses__name {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.courses__badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .courses__item--free {
   background: var(--color-free-bg);
   border: 3px dashed var(--color-free);
