@@ -42,7 +42,9 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // No API calls to worry about — everything lives in localStorage —
+        // No runtime caching to worry about for /api/ics-proxy: it's an
+        // explicit, user-triggered sync action, not something the app needs
+        // available offline. Everything else lives in localStorage —
         // so a plain app-shell precache is enough to make Créno work offline.
         globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
       },

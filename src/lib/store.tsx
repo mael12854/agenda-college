@@ -7,10 +7,12 @@ import {
   type ReactNode,
 } from "react";
 import type { AppData, Course, Homework } from "./types";
-import { loadData, saveCourses, saveFirstName, saveHomework } from "./storage";
+import { loadData, saveCourses, saveFirstName, saveHomework, saveIcalUrl } from "./storage";
 
 interface StoreValue extends AppData {
   setFirstName: (name: string) => void;
+  /** Saves the iCal link so a later resync is one tap. Pass null to forget it. */
+  setIcalUrl: (url: string | null) => void;
   addCourse: (course: Course) => void;
   updateCourse: (course: Course) => void;
   removeCourse: (id: string) => void;
@@ -31,6 +33,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const setFirstName = useCallback((name: string) => {
     saveFirstName(name);
     setData((d) => ({ ...d, settings: { ...d.settings, firstName: name } }));
+  }, []);
+
+  const setIcalUrl = useCallback((url: string | null) => {
+    saveIcalUrl(url);
+    setData((d) => ({ ...d, settings: { ...d.settings, icalUrl: url } }));
   }, []);
 
   const addCourse = useCallback((course: Course) => {
@@ -110,6 +117,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     () => ({
       ...data,
       setFirstName,
+      setIcalUrl,
       addCourse,
       updateCourse,
       removeCourse,
@@ -122,6 +130,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [
       data,
       setFirstName,
+      setIcalUrl,
       addCourse,
       updateCourse,
       removeCourse,
