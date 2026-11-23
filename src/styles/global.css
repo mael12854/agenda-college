@@ -93,6 +93,11 @@ p {
   cursor: not-allowed;
 }
 
+.button-primary--danger {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
 .button-ghost {
   font-family: var(--font-body);
   font-weight: 700;

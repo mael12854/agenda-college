@@ -48,4 +48,11 @@ describe("findNextCourse", () => {
     // Not "next" anymore — it has already started; the following occurrence is next Tuesday.
     expect(result?.date.getDate()).toBe(8);
   });
+
+  it("skips a cancelled course and finds the one after it", () => {
+    const cancelledMaths: Course = { ...maths, status: "annule" };
+    const now = new Date(2026, 8, 1, 7, 0); // Tuesday, before both courses
+    const result = findNextCourse([cancelledMaths, anglais], now, TERM_START);
+    expect(result?.course.id).toBe("2");
+  });
 });

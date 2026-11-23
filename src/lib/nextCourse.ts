@@ -21,6 +21,7 @@ export function findNextCourse(
     const date = addDays(now, dayOffset);
     const dayCourses = coursesOn(courses, date, termStartISO);
     const upcoming = dayCourses.find((c) => {
+      if (c.status === "annule") return false; // a cancelled class is never "next"
       if (dayOffset > 0) return true;
       return timeToMinutes(c.startTime) > nowMinutes;
     });

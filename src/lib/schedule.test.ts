@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDaySlots, passingLabel } from "./schedule";
+import { buildDaySlots, isLiveNow, passingLabel } from "./schedule";
 import type { Course } from "./types";
 
 function course(id: string, startTime: string, endTime: string): Course {
@@ -107,5 +107,16 @@ describe("passingLabel", () => {
   it("reads 'Pause' for a récréation-sized gap", () => {
     expect(passingLabel("09:55", "10:10")).toBe("Pause"); // 15 min
     expect(passingLabel("09:55", "10:25")).toBe("Pause"); // 29 min, still under the free threshold
+  });
+});
+
+describe("isLiveNow", () => {
+  it("is true while a normal course is running", () => {
+    expect(isLiveNow(course("a", "09:00", "10:00"), new Date(2026, 10, 23, 9, 30))).toBe(true);
+  });
+
+  it("is always false for a cancelled course, even during its time slot", () => {
+    const cancelled: Course = { ...course("a", "09:00", "10:00"), status: "annule" };
+    expect(isLiveNow(cancelled, new Date(2026, 10, 23, 9, 30))).toBe(false);
   });
 });

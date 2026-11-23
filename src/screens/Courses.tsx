@@ -4,11 +4,25 @@ import { RECURRENCE_LABELS, recurrenceBadge, TERM_START, weekLetterFor } from ".
 import { minutesToDuration, timeToMinutes, weekdayLabel } from "../lib/date";
 import { buildDaySlots, passingLabel } from "../lib/schedule";
 import { WeekToggle } from "../components/WeekToggle";
+import { StatusBadge } from "../components/StatusBadge";
+import { CourseInfoModal } from "../components/CourseInfoModal";
+import { ImportScheduleButton } from "../components/ImportScheduleButton";
 import { useState } from "react";
 import type { Course, Weekday, WeekLetter } from "../lib/types";
 import "./Courses.css";
 
 const WEEKDAYS_ORDER: Weekday[] = [0, 1, 2, 3, 4, 5, 6];
+
+/**
+ * Chronological key for the "Autres" bucket (monthly + one-off courses):
+ * dated ("once") courses sort by date then time, so a whole imported week
+ * reads day by day instead of interleaved by time-of-day across dates.
+ * Undated ("monthly") courses have no date to sort by — they sort first.
+ */
+function otherCourseSortKey(course: Course): string {
+  const date = course.recurrence.type === "once" ? course.recurrence.date : "";
+  return `${date}T${course.startTime}`;
+}
 
 function recurrenceSummary(course: Course): string {
   const r = course.recurrence;
@@ -185,11 +199,16 @@ function PassingRow({ row }: { row: Extract<PreviewRow, { kind: "passing" }> }) 
   );
 }
 
-function CourseRow({ course }: { course: Course }) {
+function CourseRow({ course, onSelect }: { course: Course; onSelect: (course: Course) => void }) {
   const badge = recurrenceBadge(course);
+  const cancelled = course.status === "annule";
   return (
     <li key={course.id}>
-      <Link to={`/cours/${course.id}`} className="courses__item">
+      <button
+        type="button"
+        onClick={() => onSelect(course)}
+        className={"courses__item courses__item--button" + (cancelled ? " courses__item--cancelled" : "")}
+      >
         <div className="courses__time">
           {course.startTime}
           <br />
@@ -198,11 +217,14 @@ function CourseRow({ course }: { course: Course }) {
         <div className="courses__body">
           <div className="courses__head">
             <span className="courses__name">{course.subject}</span>
-            {badge && <span className="courses__badge">{badge}</span>}
+            <div className="courses__badges">
+              <StatusBadge status={course.status} />
+              {badge && <span className="courses__badge">{badge}</span>}
+            </div>
           </div>
           <div className="courses__meta">{recurrenceSummary(course)}</div>
         </div>
-      </Link>
+      </button>
     </li>
   );
 }
@@ -211,10 +233,24 @@ export function Courses() {
   const { courses } = useStore();
   const actualWeek = weekLetterFor(new Date(), TERM_START);
   const [previewWeek, setPreviewWeek] = useState<WeekLetter>(actualWeek);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   const { dayGroups, otherCourses } = buildWeekPreview(courses, previewWeek);
   const isEmpty = dayGroups.length === 0 && otherCourses.length === 0;
   const showDayHeaders = dayGroups.length > 1;
+
+  if (courses.length === 0) {
+    return (
+      <div className="screen">
+        <span className="eyebrow">Cours récurrents</span>
+        <h1 className="title-xl">Tes cours</h1>
+        <div className="card courses__empty">
+          Aucun emploi du temps — importe un JSON pour commencer.
+        </div>
+        <ImportScheduleButton />
+      </div>
+    );
+  }
 
   return (
     <div className="screen">
@@ -243,7 +279,7 @@ export function Courses() {
                   if (row.kind === "free") return <FreeRow key={row.key} row={row} />;
                   if (row.kind === "lunch") return <LunchRow key={row.key} row={row} />;
                   if (row.kind === "passing") return <PassingRow key={row.key} row={row} />;
-                  return <CourseRow key={row.key} course={row.course} />;
+                  return <CourseRow key={row.key} course={row.course} onSelect={setSelectedCourse} />;
                 })}
               </ul>
             </div>
@@ -254,9 +290,10 @@ export function Courses() {
               {showDayHeaders && <span className="courses__day-heading">Autres</span>}
               <ul className="courses__list">
                 {otherCourses
-                  .sort((a, b) => a.startTime.localeCompare(b.startTime))
+                  .slice()
+                  .sort((a, b) => otherCourseSortKey(a).localeCompare(otherCourseSortKey(b)))
                   .map((course) => (
-                    <CourseRow key={course.id} course={course} />
+                    <CourseRow key={course.id} course={course} onSelect={setSelectedCourse} />
                   ))}
               </ul>
             </div>
@@ -273,6 +310,10 @@ export function Courses() {
         <strong>Types de récurrence&nbsp;:</strong>{" "}
         {Object.values(RECURRENCE_LABELS).join(" · ")}.
       </div>
+
+      {selectedCourse && (
+        <CourseInfoModal course={selectedCourse} onClose={() => setSelectedCourse(null)} />
+      )}
     </div>
   );
 }

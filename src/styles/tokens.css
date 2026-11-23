@@ -20,6 +20,18 @@
   --color-homework-ink: #3a1b00;
   --color-ink: #14122b; /* Encre — texte */
 
+  /* statuts de cours importés (EcoleDirecte) */
+  --color-status-remplace: #2f7fe0; /* Bleu — prof remplacé·e */
+  --color-status-remplace-bg: #e3edfc;
+  --color-status-controle: #e2234a; /* Rouge — contrôle, bien visible */
+  --color-status-controle-bg: #fde3e9;
+  --color-status-annule: #6b6790; /* Gris — cours annulé */
+  --color-status-annule-bg: #e6e4f1;
+
+  /* danger (suppression) */
+  --color-danger: #d1293f;
+  --color-danger-bg: #fbe4e7;
+
   /* surfaces */
   --color-bg: #ded8f7;
   --color-surface: #f6f4ff;

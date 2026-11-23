@@ -108,6 +108,7 @@ function minutesToTime(min: number): string {
 }
 
 export function isLiveNow(course: Course, now: Date): boolean {
+  if (course.status === "annule") return false; // a cancelled class is never "EN COURS"
   const nowMin = now.getHours() * 60 + now.getMinutes();
   return nowMin >= timeToMinutes(course.startTime) && nowMin < timeToMinutes(course.endTime);
 }

@@ -14,6 +14,10 @@ interface StoreValue extends AppData {
   addCourse: (course: Course) => void;
   updateCourse: (course: Course) => void;
   removeCourse: (id: string) => void;
+  /** Replaces any previously imported ("once") courses on the given dates, then adds `newCourses`. */
+  importCourses: (newCourses: Course[], dates: string[]) => void;
+  /** Wipes every course — recurring or one-off. Devoirs are untouched. */
+  clearCourses: () => void;
   addHomework: (hw: Homework) => void;
   toggleHomework: (id: string) => void;
   removeHomework: (id: string) => void;
@@ -53,6 +57,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const importCourses = useCallback((newCourses: Course[], dates: string[]) => {
+    setData((d) => {
+      const dateSet = new Set(dates);
+      // Drop any previous one-off course on a date this import covers, so
+      // re-importing the same week (e.g. after EcoleDirecte updates it)
+      // replaces it instead of piling up duplicates. Recurring courses are
+      // never touched by an import.
+      const kept = d.courses.filter(
+        (c) => !(c.recurrence.type === "once" && dateSet.has(c.recurrence.date)),
+      );
+      const courses = [...kept, ...newCourses];
+      saveCourses(courses);
+      return { ...d, courses };
+    });
+  }, []);
+
+  const clearCourses = useCallback(() => {
+    setData((d) => {
+      saveCourses([]);
+      return { ...d, courses: [] };
+    });
+  }, []);
+
   const addHomework = useCallback((hw: Homework) => {
     setData((d) => {
       const homework = [...d.homework, hw];
@@ -86,6 +113,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addCourse,
       updateCourse,
       removeCourse,
+      importCourses,
+      clearCourses,
       addHomework,
       toggleHomework,
       removeHomework,
@@ -96,6 +125,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addCourse,
       updateCourse,
       removeCourse,
+      importCourses,
+      clearCourses,
       addHomework,
       toggleHomework,
       removeHomework,
